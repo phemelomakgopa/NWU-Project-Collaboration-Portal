@@ -8,7 +8,7 @@ SECRET_KEY = 'REMOVED'
 
 DEBUG = False  # Set to False in production
 
-ALLOWED_HOSTS = ['pcp-backend-f4a2.onrender.com', '127.0.0.1', 'localhost']
+ALLOWED_HOSTS = ['pcp-backend-f4a2.onrender.com', '127.0.0.1', 'localhost', 'wonderful-coast-0409a4c03.2.azurestaticapps.net']
 
 INSTALLED_APPS = [
     'django.contrib.admin',
