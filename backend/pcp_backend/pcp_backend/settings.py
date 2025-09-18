@@ -64,10 +64,10 @@ WSGI_APPLICATION = 'pcp_backend.wsgi.application'
 DATABASES = {
     'default': {
         'ENGINE': 'django.db.backends.postgresql',
-        'NAME': 'pcp',
+        'NAME': 'postgres',
         'USER': 'postgres',
         'PASSWORD': 'REMOVED',  # Replace with your actual password
-        'HOST': 'REMOVED',
+        'HOST': '127.0.0.1',
         'PORT': '5432',
     }
 }
@@ -103,7 +103,6 @@ CORS_ALLOWED_ORIGINS = [
     "http://127.0.0.1:8000",
     "https://wonderful-coast-0409a4c03.2.azurestaticapps.net", #frontend host
     "https://pcp-backend-f4a2.onrender.com", #backend host
-    "REMOVED:5432" #database host
 ]
 
 # Default primary key field type
