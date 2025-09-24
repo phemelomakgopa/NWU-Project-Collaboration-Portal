@@ -1,56 +1,32 @@
-import React, { useRef, useState, useEffect } from 'react';
-import axios from 'axios';
-import { useNavigate } from 'react-router-dom';
+// components/Hloni.js
+import React, { useState, useEffect, useRef } from 'react';
+import styles from './Hloni.module.css';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
-import {
-  faFolder, faCheckCircle, faUsers, faCalendar, faCodeBranch, faFile, faInbox,
-  faBell, faCog, faSignOutAlt, faPlus, faSearch, faEnvelope, faProjectDiagram,
-  faUserCheck, faComment, faUpload
+import { 
+  faFolder, faTasks, faUsers, faCalendar, 
+  faCodeBranch, faFile, faInbox, faBell, 
+  faCog, faSignOutAlt, faPlus, faComment,
+  faUpload, faSearch, faEnvelope, faProjectDiagram,
+  faUserCheck, faCheckCircle
 } from '@fortawesome/free-solid-svg-icons';
-import styles from './Dashboard.module.css';
 
-const getUserEmail = () => {
-  try {
-    const storedUser = localStorage.getItem('user');
-    return storedUser ? JSON.parse(storedUser).email : 'Anonymous User';
-  } catch (e) {
-    console.error('Failed to parse user from localStorage:', e);
-    return 'Student';
-  }
-};
+const Hloni = () => {
+  const [userEmail, setUserEmail] = useState(() => {
+    try {
+      const storedUser = localStorage.getItem('user');
+      return storedUser ? JSON.parse(storedUser).email : 'Anonymous User';
+    } catch (e) {
+      console.error('Failed to parse user from localStorage:', e);
+      return 'Student';
+    }
+  });
 
-const Dashboard = () => {
-  const [email, setEmail] = useState(getUserEmail());
-  const [username, setUsername] = useState('');
-  const navigate = useNavigate();
   const calendarRef = useRef(null);
   const progressChartRef = useRef(null);
   const workloadChartRef = useRef(null);
 
   useEffect(() => {
-    const token = localStorage.getItem('access_token');
-    console.log("Token: " + token);
-    if (!token) {
-      navigate('/');
-      return;
-    }
-
-    const API_BASE_URL = process.env.REACT_APP_API_URL || 'https://pcp-backend-f4a2.onrender.com';
-
-    axios.get(`${API_BASE_URL}/api/dashboard/`, {
-      headers: { Authorization: `Bearer ${token}` }
-    })
-      .then(response => {
-        setEmail(response.data.email);
-        setUsername(response.data.username);
-      })
-      .catch(err => {
-        if (err.response && err.response.status === 401) {
-          navigate('/');
-        }
-      });
-
-    // Initialize calendar
+    // Initialize calendar after component mounts
     if (calendarRef.current && window.FullCalendar) {
       const calendar = new window.FullCalendar.Calendar(calendarRef.current, {
         initialView: "dayGridMonth",
@@ -63,16 +39,12 @@ const Dashboard = () => {
         ]
       });
       calendar.render();
-
-      // Cleanup calendar on unmount
-      return () => calendar.destroy();
-    } else {
-      console.warn('FullCalendar is not available');
     }
 
     // Initialize charts
     if (progressChartRef.current && workloadChartRef.current && window.Chart) {
-      const progressChart = new window.Chart(progressChartRef.current, {
+      // Progress Chart
+      new window.Chart(progressChartRef.current, {
         type: 'line',
         data: {
           labels: ['Mon', 'Tue', 'Wed', 'Thu', 'Fri', 'Sat', 'Sun'],
@@ -88,42 +60,42 @@ const Dashboard = () => {
         options: {
           responsive: true,
           plugins: {
-            legend: { position: 'top' }
+            legend: {
+              position: 'top',
+            }
           }
         }
       });
-
-      const workloadChart = new window.Chart(workloadChartRef.current, {
+      
+      // Workload Chart
+      new window.Chart(workloadChartRef.current, {
         type: 'doughnut',
         data: {
           labels: ['CMPG 321', 'CMPG 323', 'CMPG 311'],
           datasets: [{
             data: [40, 35, 25],
-            backgroundColor: ['#3498db', '#2ecc71', '#e74c3c']
+            backgroundColor: [
+              '#3498db',
+              '#2ecc71',
+              '#e74c3c'
+            ]
           }]
         },
         options: {
           responsive: true,
           plugins: {
-            legend: { position: 'bottom' }
+            legend: {
+              position: 'bottom',
+            }
           }
         }
       });
-
-      // Cleanup charts on unmount
-      return () => {
-        progressChart.destroy();
-        workloadChart.destroy();
-      };
-    } else {
-      console.warn('Chart.js is not available');
     }
-  }, [navigate]);
+  }, []);
 
   const logout = () => {
-    localStorage.removeItem('access_token');
-    localStorage.removeItem('user');
-    navigate("/");
+    alert("You have been logged out!");
+    window.location.href = "/login";
   };
 
   return (
@@ -134,7 +106,7 @@ const Dashboard = () => {
           <div className={styles.logo}>NWU</div>
           <div className={styles.brandText}>
             <h2>Project Collaboration Portal</h2>
-            <small>{email}</small>
+            <small>{userEmail}</small>
           </div>
         </div>
 
@@ -175,8 +147,8 @@ const Dashboard = () => {
               <FontAwesomeIcon icon={faCog} />
             </button>
             <div className={styles.user}>
-              <span className={styles.username}>{username}</span>
               <div className={styles.avatar}>JM</div>
+              <span className={styles.username}>John M.</span>
               <button className={styles.logoutBtn} onClick={logout} title="Logout">
                 <FontAwesomeIcon icon={faSignOutAlt} />
               </button>
@@ -221,7 +193,7 @@ const Dashboard = () => {
                 <td>CMPG 321</td>
                 <td>
                   <div className={styles.progressBar}>
-                    <div className={styles.progress} style={{ width: '80%' }}></div>
+                    <div className={styles.progress} style={{width: '80%'}}></div>
                   </div>
                 </td>
                 <td>11/11/2025</td>
@@ -232,7 +204,7 @@ const Dashboard = () => {
                 <td>CMPG 323</td>
                 <td>
                   <div className={styles.progressBar}>
-                    <div className={styles.progress} style={{ width: '50%' }}></div>
+                    <div className={styles.progress} style={{width: '50%'}}></div>
                   </div>
                 </td>
                 <td>06/10/2025</td>
@@ -243,7 +215,7 @@ const Dashboard = () => {
                 <td>CMPG 311</td>
                 <td>
                   <div className={styles.progressBar}>
-                    <div className={styles.progress} style={{ width: '20%' }}></div>
+                    <div className={styles.progress} style={{width: '20%'}}></div>
                   </div>
                 </td>
                 <td>21/09/2025</td>
@@ -328,4 +300,5 @@ const Dashboard = () => {
   );
 };
 
+export default Hloni;
 export default Dashboard;
