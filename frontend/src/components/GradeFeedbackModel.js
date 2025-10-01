@@ -1,8 +1,8 @@
 import React, { useState, useEffect } from 'react';
 import PropTypes from 'prop-types';
-import styles from './GradeFeedbackModal.module.css';
+import styles from './Models.module.css';
 
-const GradeFeedbackModal = ({ isOpen, onClose, projectId, onSubmit, initialGrade = '', initialFeedback = '' }) => {
+const GradeFeedbackmodel = ({ isOpen, onClose, projectId, onSubmit, initialGrade = '', initialFeedback = '' }) => {
   const [grade, setGrade] = useState(String(initialGrade));
   const [feedback, setFeedback] = useState(initialFeedback);
   const [isSubmitting, setIsSubmitting] = useState(false);
@@ -51,16 +51,16 @@ const GradeFeedbackModal = ({ isOpen, onClose, projectId, onSubmit, initialGrade
   };
 
   return (
-    <div className={styles.modalOverlay} onClick={onClose}>
-      <div className={styles.modalContent} onClick={(e) => e.stopPropagation()}>
-        <div className={styles.modalHeader}>
-          <h2 className={styles.modalTitle}>Grade & Feedback</h2>
-          <button onClick={onClose} className={styles.closeButton} aria-label="Close modal">
+    <div className={styles.modelOverlay} onClick={onClose}>
+      <div className={styles.modelContent} onClick={(e) => e.stopPropagation()}>
+        <div className={styles.modelHeader}>
+          <h2 className={styles.modelTitle}>Grade & Feedback</h2>
+          <button onClick={onClose} className={styles.closeButton} aria-label="Close model">
             &times;
           </button>
         </div>
 
-        <div className={styles.modalBody}>
+        <div className={styles.modelBody}>
           {error && <div className={styles.errorMessage}>{error}</div>}
           <div className={styles.formGroup}>
             <label htmlFor="grade" className={styles.label}>
@@ -93,7 +93,7 @@ const GradeFeedbackModal = ({ isOpen, onClose, projectId, onSubmit, initialGrade
             <p className={styles.charCount}>{feedback.length} characters</p>
           </div>
 
-          <div className={styles.modalFooter}>
+          <div className={styles.modelFooter}>
             <button
               type="button"
               onClick={onClose}
@@ -118,7 +118,7 @@ const GradeFeedbackModal = ({ isOpen, onClose, projectId, onSubmit, initialGrade
 };
 
 // PropTypes for validation
-GradeFeedbackModal.propTypes = {
+GradeFeedbackmodel.propTypes = {
   isOpen: PropTypes.bool.isRequired,
   onClose: PropTypes.func.isRequired,
   projectId: PropTypes.number.isRequired,
@@ -127,9 +127,9 @@ GradeFeedbackModal.propTypes = {
   initialFeedback: PropTypes.string,
 };
 
-GradeFeedbackModal.defaultProps = {
+GradeFeedbackmodel.defaultProps = {
   initialGrade: '',
   initialFeedback: '',
 };
 
-export default GradeFeedbackModal;
+export default GradeFeedbackmodel;

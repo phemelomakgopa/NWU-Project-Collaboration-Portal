@@ -1,8 +1,8 @@
 import React, { useState, useEffect } from 'react';
 import PropTypes from 'prop-types';
-import styles from './ProjectDetailsModal.module.css';
+import styles from './Models.module.css';
 
-const ProjectDetailsModal = ({ isOpen, onClose, projectId, onSubmit, initialName = '', initialDescription = '', initialDueDate = '' }) => {
+const ProjectDetailsmodel = ({ isOpen, onClose, projectId, onSubmit, initialName = '', initialDescription = '', initialDueDate = '' }) => {
   const [name, setName] = useState(initialName);
   const [description, setDescription] = useState(initialDescription);
   const [dueDate, setDueDate] = useState(initialDueDate);
@@ -47,16 +47,16 @@ const ProjectDetailsModal = ({ isOpen, onClose, projectId, onSubmit, initialName
   };
 
   return (
-    <div className={styles.modalOverlay} onClick={onClose}>
-      <div className={styles.modalContent} onClick={(e) => e.stopPropagation()}>
-        <div className={styles.modalHeader}>
-          <h2 className={styles.modalTitle}>Update Project Details</h2>
-          <button onClick={onClose} className={styles.closeButton} aria-label="Close modal">
+    <div className={styles.modelOverlay} onClick={onClose}>
+      <div className={styles.modelContent} onClick={(e) => e.stopPropagation()}>
+        <div className={styles.modelHeader}>
+          <h2 className={styles.modelTitle}>Update Project Details</h2>
+          <button onClick={onClose} className={styles.closeButton} aria-label="Close model">
             &times;
           </button>
         </div>
 
-        <div className={styles.modalBody}>
+        <div className={styles.modelBody}>
           {error && <div className={styles.errorMessage}>{error}</div>}
           <div className={styles.formGroup}>
             <label htmlFor="name" className={styles.label}>
@@ -103,7 +103,7 @@ const ProjectDetailsModal = ({ isOpen, onClose, projectId, onSubmit, initialName
             />
           </div>
 
-          <div className={styles.modalFooter}>
+          <div className={styles.modelFooter}>
             <button
               type="button"
               onClick={onClose}
@@ -128,7 +128,7 @@ const ProjectDetailsModal = ({ isOpen, onClose, projectId, onSubmit, initialName
 };
 
 // PropTypes for validation
-ProjectDetailsModal.propTypes = {
+ProjectDetailsmodel.propTypes = {
   isOpen: PropTypes.bool.isRequired,
   onClose: PropTypes.func.isRequired,
   projectId: PropTypes.number.isRequired,
@@ -138,10 +138,10 @@ ProjectDetailsModal.propTypes = {
   initialDueDate: PropTypes.string,
 };
 
-ProjectDetailsModal.defaultProps = {
+ProjectDetailsmodel.defaultProps = {
   initialName: '',
   initialDescription: '',
   initialDueDate: '',
 };
 
-export default ProjectDetailsModal;
+export default ProjectDetailsmodel;
