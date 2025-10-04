@@ -66,13 +66,14 @@ WSGI_APPLICATION = 'pcp_backend.wsgi.application'
 DATABASES = {
     'default': {
         'ENGINE': 'django.db.backends.postgresql',
-        'NAME': 'pcpdb',
+        'NAME': 'pcpdb_8lsj',
         'USER': 'pcpdbadmin',
         'PASSWORD': 'REMOVED',  # Replace with your actual password
         'HOST': 'REMOVED',
         'PORT': '5432',
     }
 }
+
 
 # Password validation
 AUTH_PASSWORD_VALIDATORS = [
