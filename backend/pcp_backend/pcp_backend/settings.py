@@ -62,7 +62,21 @@ TEMPLATES = [
 
 WSGI_APPLICATION = 'pcp_backend.wsgi.application'
 
-# Database
+'''
+# Database settings for production
+DATABASES = {
+    'default': {
+        'ENGINE': 'django.db.backends.postgresql',
+        'NAME': 'pcpdb',
+        'USER': 'pcpdbadmin',
+        'PASSWORD': 'REMOVED',  # Replace with your actual password
+        'HOST': 'REMOVED',
+        'PORT': '5432',
+    }
+}
+'''
+
+# Database settings for development
 DATABASES = {
     'default': {
         'ENGINE': 'django.db.backends.postgresql',
