@@ -62,7 +62,6 @@ TEMPLATES = [
 
 WSGI_APPLICATION = 'pcp_backend.wsgi.application'
 
-'''
 # Database settings for development
 DATABASES = {
     'default': {
@@ -88,7 +87,7 @@ DATABASES = {
     }
 }
 
-
+'''
 # Password validation
 AUTH_PASSWORD_VALIDATORS = [
     {'NAME': 'django.contrib.auth.password_validation.UserAttributeSimilarityValidator',},
