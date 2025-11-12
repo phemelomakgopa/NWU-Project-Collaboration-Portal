@@ -1,7 +1,9 @@
 import React, { useRef, useEffect } from 'react';
 import './LoginButton.css';
+import './LoginButton.extra.css';
 
-const LoginButton = ({ children }) => {
+// Accept arbitrary button props (like disabled) and pass them through
+const LoginButton = ({ children, ...props }) => {
   const buttonRef = useRef(null);
 
   useEffect(() => {
@@ -35,7 +37,7 @@ const LoginButton = ({ children }) => {
   }, []);
 
   return (
-    <button className="loginButton" ref={buttonRef} type="submit">
+    <button className="loginButton" ref={buttonRef} type="submit" {...props}>
       {children}
     </button>
   );

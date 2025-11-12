@@ -96,7 +96,7 @@ const Login = () => {
                   type="email"
                   id="email"
                   name="email"
-                  placeholder="Enter your email"
+                  placeholder="Enter your email" autoFocus
                   required
                   value={email}
                   onChange={(e) => setEmail(e.target.value)}
@@ -140,7 +140,7 @@ const Login = () => {
                 Forgot password?
               </button>
             </div>
-            <LoginButton>Login</LoginButton>
+            <LoginButton disabled={!email || !password}>Login</LoginButton>
           </form>
 
           <div className={styles.divider}>
