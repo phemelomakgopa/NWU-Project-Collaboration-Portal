@@ -1,72 +1,49 @@
 from django.contrib import admin
-from django.conf import settings
-from django.conf.urls.static import static
 from django.urls import path
-from pcp_webapp.views import (
-    LoginView, DashboardView, AddUserView, AddProjectView, 
-    GetMembersView, AddTaskView, CalendarView, GetUserTasksView, 
-    UpdateTaskView, DocumentUploadView, GetProjectTasksView, GetTaskDocumentsView,
-    DeleteTaskView, GetProjectDataView, DownloadDocumentView, AddProjectUserView, 
-    DeleteProjectUserView, DeleteDocumentView, ReviewTask, GetTaskMembersView,
-    GetProjectChatView, SendChatMessageView, GetCompletedTasksView, GetContributionsView,
-    UpdateProjectDetailsView, UpdateProjectFeedbackView,UpdateProfileView, GetProjectLinksView,
-    CreateNotificationView, DeleteNotificationView, CompleteTaskView, GetFinalizedTasksView,
-    GetTaskDetailsView, RemoveTaskMemberView, AddTaskMemberView, UploadDocumentView, GetProjectMeetingsView,
-    CreateNotificationView, ResetPasswordView, DeleteProjectView, ChangeRoleView, AddMeetingView,
-    AddProjectLinkView, DeleteProjectLinkView, GetUserDetailsView, VerifySecurityAnswerView, GetUserMeetingsView,GetUserNotificationsView
-)
+
+from pcp_webapp import views
 
 urlpatterns = [
     path('admin/', admin.site.urls),
-    path('api/login/', LoginView.as_view(), name='login'),
-    path('api/dashboard/', DashboardView.as_view(), name='dashboard'),
-    path('api/adduser/', AddUserView.as_view(), name='adduser'),
-    path('api/newproject/', AddProjectView.as_view(), name='newproject'),
-    path('api/getmembers/', GetMembersView.as_view(), name='getmembers'),
-    path('api/addtask/', AddTaskView.as_view(), name='addtask'),
-    path('api/calendar/', CalendarView.as_view(), name='calendar'),
-    path('api/getusertasks/', GetUserTasksView.as_view(), name='getusertasks'),
-    path('api/uploaddocument/', UploadDocumentView.as_view(), name='upload-document'),
-    path('api/getprojecttasks/', GetProjectTasksView.as_view(), name='get-project-tasks'),
-    path('api/gettaskdocuments/', GetTaskDocumentsView.as_view(), name='gettaskdocuments'),
-    path('api/updatetaskdetails/', UpdateTaskView.as_view(), name='updatetask'),
-    path('api/document-upload/', DocumentUploadView.as_view(), name='document_upload'),
-    path('api/getprojectdata/', GetProjectDataView.as_view(), name='getprojectdata'),
-    path('api/document-download/', DownloadDocumentView.as_view(), name='document_download'),
-    path('api/deletetask/<int:task_id>/', DeleteTaskView.as_view(), name='deletetask'),
-    path('api/updatetask/<int:task_id>/', ReviewTask.as_view(), name='review_task'),
-    path('api/addprojectmember/', AddProjectUserView.as_view(), name='addmember'),
-    path('api/deleteprojectmember/', DeleteProjectUserView.as_view(), name='deletemember'),
-    path('api/deletedocument/<int:document_id>/', DeleteDocumentView.as_view(), name='deletedocument'),
-    path('api/getcompletedtasks/', GetCompletedTasksView.as_view(), name='getcompletedtasks'),
-    path('api/getfinalizedtasks/<int:requested_project_id>/', GetFinalizedTasksView.as_view(), name='getfinalizedtasks'),
-    path('api/getprojectchat/', GetProjectChatView.as_view(), name='getprojectchat'),
-    path('api/sendchatmessage/', SendChatMessageView.as_view(), name='sendchatmessage'),
-    path('api/updateprojectdetails/', UpdateProjectDetailsView.as_view(), name='updateprojectdetails'),
-    path('api/updateprojectfeedback/', UpdateProjectFeedbackView.as_view(), name='updateprojectfeedback'),
-    path('api/updateprofile/', UpdateProfileView.as_view(), name='updateprofile'),
-    path('api/createnotification/', CreateNotificationView.as_view(), name='createnotification'),
-    path('api/deletenotification/<int:notif_id>/', DeleteNotificationView.as_view(), name='deletenotification'),
-    path('api/completetask/', CompleteTaskView.as_view(), name='completetask'),
-    path('api/gettaskmembers/', GetTaskMembersView.as_view(), name='gettaskmembers'),
-    path('api/gettaskdetails/', GetTaskDetailsView.as_view(), name="gettaskdetails"),
-    path('api/removetaskmember/', RemoveTaskMemberView.as_view(), name="removetaskmember"),
-    path('api/addtaskmember/', AddTaskMemberView.as_view(), name="addtaskmember"),
-    path('api/resetpassword/', ResetPasswordView.as_view(), name='resetpassword'),
-    path('api/deleteproject/<int:project_id>/', DeleteProjectView.as_view(), name="deleteproject"),
-    path('api/changerole/', ChangeRoleView.as_view(), name="changerole"),
-    path('api/addprojectlink/', AddProjectLinkView.as_view(), name='addprojectlink'),
-    path('api/deleteprojectlink/', DeleteProjectLinkView.as_view(), name='deleteprojectlink'),
-    path('api/getuserdetails/', GetUserDetailsView.as_view(), name='getuserdetails'),
-    path('api/verifysecurityanswer/', VerifySecurityAnswerView.as_view(), name='verifysecurityanswer'),
-    path('api/getcontributions/', GetContributionsView.as_view(), name="getcontributions"),
-    path('api/getusermeetings/', GetUserMeetingsView.as_view(), name='getusermeetings'),
-    path('api/getprojectlinks/', GetProjectLinksView.as_view(), name="getprojectlinks"),
-    path('api/getusernotifications/', GetUserNotificationsView.as_view(), name='getusernotifications'),
-    path('api/addmeeting/', AddMeetingView.as_view(), name='addmeeting'),
-    path('api/getprojectmeetings/', GetProjectMeetingsView.as_view(), name='getprojectmeetings'),
-]
 
-# Serve media files during development
-if settings.DEBUG:
-    urlpatterns += static(settings.MEDIA_URL, document_root=settings.MEDIA_ROOT)
+    # Authentication
+    path('api/auth/login/', views.LoginView.as_view(), name='login'),
+    path('api/auth/register/', views.RegisterView.as_view(), name='register'),
+    path('api/auth/security-questions/', views.SecurityQuestionsView.as_view(), name='security-questions'),
+    path('api/auth/forgot/question/', views.ForgotPasswordQuestionView.as_view(), name='forgot-question'),
+    path('api/auth/forgot/verify/', views.ForgotPasswordVerifyView.as_view(), name='forgot-verify'),
+    path('api/auth/forgot/reset/', views.ForgotPasswordResetView.as_view(), name='forgot-reset'),
+
+    # Current user
+    path('api/me/', views.MeView.as_view(), name='me'),
+    path('api/users/lookup/', views.UserLookupView.as_view(), name='user-lookup'),
+    path('api/dashboard/', views.DashboardView.as_view(), name='dashboard'),
+
+    # Notifications
+    path('api/notifications/', views.NotificationListView.as_view(), name='notifications'),
+    path('api/notifications/read-all/', views.NotificationReadAllView.as_view(), name='notifications-read-all'),
+    path('api/notifications/<int:notif_id>/', views.NotificationDetailView.as_view(), name='notification-detail'),
+
+    # Projects
+    path('api/projects/', views.ProjectCreateView.as_view(), name='projects'),
+    path('api/projects/<int:project_id>/', views.ProjectDetailView.as_view(), name='project-detail'),
+    path('api/projects/<int:project_id>/members/', views.MemberListView.as_view(), name='project-members'),
+    path('api/projects/<int:project_id>/members/<str:email>/', views.MemberDetailView.as_view(), name='project-member'),
+    path('api/projects/<int:project_id>/tasks/', views.TaskListView.as_view(), name='project-tasks'),
+    path('api/projects/<int:project_id>/submission/', views.SubmissionView.as_view(), name='project-submission'),
+    path('api/projects/<int:project_id>/grade/', views.GradeView.as_view(), name='project-grade'),
+    path('api/projects/<int:project_id>/chat/', views.ChatView.as_view(), name='project-chat'),
+    path('api/projects/<int:project_id>/meetings/', views.MeetingListView.as_view(), name='project-meetings'),
+    path('api/projects/<int:project_id>/links/', views.LinkListView.as_view(), name='project-links'),
+
+    # Tasks and documents
+    path('api/tasks/<int:task_id>/', views.TaskDetailView.as_view(), name='task-detail'),
+    path('api/tasks/<int:task_id>/submit/', views.TaskSubmitView.as_view(), name='task-submit'),
+    path('api/tasks/<int:task_id>/review/', views.TaskReviewView.as_view(), name='task-review'),
+    path('api/tasks/<int:task_id>/documents/', views.TaskDocumentsView.as_view(), name='task-documents'),
+    path('api/documents/<int:document_id>/', views.DocumentDetailView.as_view(), name='document-detail'),
+
+    # Meetings and links
+    path('api/meetings/<int:meeting_id>/', views.MeetingDetailView.as_view(), name='meeting-detail'),
+    path('api/links/<int:link_id>/', views.LinkDetailView.as_view(), name='link-detail'),
+]

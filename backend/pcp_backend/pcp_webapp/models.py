@@ -13,6 +13,14 @@ class User(models.Model):
     class Meta:
         managed = True
 
+    # Lets DRF's IsAuthenticated accept a portal user returned by our JWT auth.
+    is_authenticated = True
+    is_anonymous = False
+
+    @property
+    def full_name(self):
+        return f"{self.first_name} {self.last_name}".strip()
+
     def __str__(self):
         return self.email
 
@@ -69,7 +77,7 @@ class User_Task(models.Model):
         managed = True
 
     def __str__(self):
-        return f"{self.user_email} - {self.task_id}"
+        return f"{self.email_id} - {self.task_id_id}"
     
 class Document(models.Model):
     document_id = models.AutoField(primary_key=True)
@@ -113,7 +121,7 @@ class ActivityLog(models.Model):
         ordering = ['-created_at']
 
     def __str__(self):
-        return f"{self.user.email} - {self.action_type}"
+        return f"{self.email_id} - {self.action_type}"
     
 class EditRequest(models.Model):
     task = models.ForeignKey("Task", on_delete=models.CASCADE, related_name="edit_requests")
@@ -122,7 +130,7 @@ class EditRequest(models.Model):
     created_at = models.DateTimeField(auto_now_add=True)
 
     def __str__(self):
-        return f"Edit requested for {self.task.title} by {self.requested_by}"
+        return f"Edit requested for {self.task.task_name} by {self.requested_by}"
 
 class ChatMessage(models.Model):
     chat_message_id = models.AutoField(primary_key=True)
@@ -146,7 +154,7 @@ class ProjectChat(models.Model):
         managed = True
 
     def __str__(self):
-        return f"Chat in Project {self.project_id} - Message ID {self.chat_message_id}"
+        return f"Chat in Project {self.project_id_id} - Message ID {self.chat_message_id}"
 
 #Notification model
 class Notification(models.Model):
@@ -154,6 +162,8 @@ class Notification(models.Model):
     time_sent = models.DateTimeField()
     title = models.CharField(max_length=100)
     message = models.TextField()
+    # Optional link back to the project the notification is about.
+    project = models.ForeignKey(Project, on_delete=models.SET_NULL, null=True, blank=True, related_name='notifications')
 
     class Meta:
         managed = True
@@ -166,12 +176,13 @@ class UserNotification(models.Model):
     user_notification_id = models.AutoField(primary_key=True)
     email = models.ForeignKey(User, on_delete=models.CASCADE)
     notif = models.ForeignKey(Notification, on_delete=models.CASCADE)
+    is_read = models.BooleanField(default=False)
 
     class Meta:
         managed = True
 
     def __str__(self):
-        return f"Notification {self.notif_id} for {self.email} - Read: {self.is_read}"
+        return f"Notification {self.notif_id} for {self.email_id} - Read: {self.is_read}"
 
 class ProjectLinks(models.Model):
     link_id = models.AutoField(primary_key=True)

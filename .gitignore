@@ -24,3 +24,8 @@ yarn-error.log*
 # Python virtual environment
 venv/
 backend/pcp_backend/venv/
+# Python bytecode and test artefacts
+__pycache__/
+*.pyc
+test-media-tmp/
+backend/pcp_backend/local.sqlite3

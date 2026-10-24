@@ -1,0 +1,214 @@
+/*
+  Project Collaboration Portal design tokens.
+  Calm "study desk" palette: cool paper, slate ink, eucalyptus for action,
+  muted plum (a nod to NWU purple) for supervisors and meetings.
+*/
+:root {
+  --paper: #f4f6f3;
+  --surface: #ffffff;
+  --surface-sunk: #ebefeb;
+  --surface-hover: #f0f3f0;
+  --line: #dce2dd;
+  --line-strong: #c3ccc6;
+
+  --ink: #1e2a2e;
+  --ink-soft: #4b5b5f;
+  --ink-faint: #6f7f82;
+
+  --primary: #3b7a70;
+  --primary-strong: #2c5f57;
+  --primary-tint: #e1eeea;
+  --on-primary: #ffffff;
+
+  --plum: #6b5b8c;
+  --plum-tint: #ebe7f2;
+  --amber: #93650f;
+  --amber-tint: #f6ecd6;
+  --rose: #a9483f;
+  --rose-tint: #f6e3e0;
+  --green: #36704a;
+  --green-tint: #e0efe4;
+
+  --focus-ring: 0 0 0 3px color-mix(in srgb, var(--primary) 35%, transparent);
+  --shadow-pop: 0 18px 40px -18px rgba(30, 42, 46, 0.35), 0 2px 6px rgba(30, 42, 46, 0.06);
+  --scrim: rgba(22, 31, 34, 0.42);
+
+  --radius-sm: 6px;
+  --radius-md: 10px;
+  --radius-lg: 16px;
+
+  --font-ui: 'Atkinson Hyperlegible', 'Segoe UI', system-ui, -apple-system, sans-serif;
+  --font-title: 'Literata', Georgia, 'Times New Roman', serif;
+
+  --text-xs: 0.8125rem;  /* 13px */
+  --text-sm: 0.875rem;   /* 14px */
+  --text-md: 1rem;       /* 16px */
+  --text-lg: 1.1875rem;  /* 19px */
+  --text-xl: 1.5rem;     /* 24px */
+  --text-2xl: 2rem;      /* 32px */
+
+  --space-1: 4px;
+  --space-2: 8px;
+  --space-3: 12px;
+  --space-4: 16px;
+  --space-5: 24px;
+  --space-6: 32px;
+  --space-7: 48px;
+
+  --content-width: 1180px;
+  color-scheme: light;
+}
+
+:root[data-theme='dark'] {
+  --paper: #141b1d;
+  --surface: #1b2427;
+  --surface-sunk: #11171a;
+  --surface-hover: #212c2f;
+  --line: #2b373a;
+  --line-strong: #3a484b;
+  --ink: #dde5e2;
+  --ink-soft: #a9b7b4;
+  --ink-faint: #849390;
+  --primary: #7fbcb0;
+  --primary-strong: #9fd0c5;
+  --primary-tint: #1f3633;
+  --on-primary: #10201d;
+  --plum: #b4a6d6;
+  --plum-tint: #2b2638;
+  --amber: #d9ac57;
+  --amber-tint: #362c19;
+  --rose: #e3928a;
+  --rose-tint: #3a2321;
+  --green: #8cc79c;
+  --green-tint: #1f3326;
+  --shadow-pop: 0 18px 40px -18px rgba(0, 0, 0, 0.7), 0 2px 6px rgba(0, 0, 0, 0.3);
+  --scrim: rgba(5, 9, 10, 0.6);
+  color-scheme: dark;
+}
+
+@media (prefers-color-scheme: dark) {
+  :root:not([data-theme='light']) {
+    --paper: #141b1d;
+    --surface: #1b2427;
+    --surface-sunk: #11171a;
+    --surface-hover: #212c2f;
+    --line: #2b373a;
+    --line-strong: #3a484b;
+    --ink: #dde5e2;
+    --ink-soft: #a9b7b4;
+    --ink-faint: #849390;
+    --primary: #7fbcb0;
+    --primary-strong: #9fd0c5;
+    --primary-tint: #1f3633;
+    --on-primary: #10201d;
+    --plum: #b4a6d6;
+    --plum-tint: #2b2638;
+    --amber: #d9ac57;
+    --amber-tint: #362c19;
+    --rose: #e3928a;
+    --rose-tint: #3a2321;
+    --green: #8cc79c;
+    --green-tint: #1f3326;
+    --shadow-pop: 0 18px 40px -18px rgba(0, 0, 0, 0.7), 0 2px 6px rgba(0, 0, 0, 0.3);
+    --scrim: rgba(5, 9, 10, 0.6);
+    color-scheme: dark;
+  }
+}
+
+*,
+*::before,
+*::after {
+  box-sizing: border-box;
+}
+
+html {
+  -webkit-text-size-adjust: 100%;
+}
+
+body {
+  margin: 0;
+  min-height: 100vh;
+  background: var(--paper);
+  color: var(--ink);
+  font-family: var(--font-ui);
+  font-size: var(--text-md);
+  line-height: 1.55;
+  -webkit-font-smoothing: antialiased;
+}
+
+h1,
+h2,
+h3,
+h4,
+p,
+ul,
+ol,
+figure {
+  margin: 0;
+}
+
+h1,
+h2,
+h3 {
+  font-family: var(--font-title);
+  font-weight: 600;
+  line-height: 1.25;
+  letter-spacing: -0.01em;
+  color: var(--ink);
+}
+
+h4 {
+  font-size: var(--text-md);
+  font-weight: 700;
+}
+
+ul,
+ol {
+  padding: 0;
+  list-style: none;
+}
+
+a {
+  color: var(--primary-strong);
+  text-underline-offset: 2px;
+}
+
+button,
+input,
+select,
+textarea {
+  font: inherit;
+  color: inherit;
+}
+
+button {
+  cursor: pointer;
+}
+
+:focus-visible {
+  outline: 2px solid var(--primary);
+  outline-offset: 2px;
+}
+
+::selection {
+  background: var(--primary-tint);
+}
+
+.visually-hidden {
+  position: absolute !important;
+  width: 1px;
+  height: 1px;
+  overflow: hidden;
+  clip: rect(0 0 0 0);
+  white-space: nowrap;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  *,
+  *::before,
+  *::after {
+    animation-duration: 0.01ms !important;
+    transition-duration: 0.01ms !important;
+    scroll-behavior: auto !important;
+  }
+}

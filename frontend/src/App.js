@@ -1,48 +1,57 @@
 import React from 'react';
-import { BrowserRouter as Router, Routes, Route, Navigate, Outlet } from 'react-router-dom';
+import { BrowserRouter, Navigate, Outlet, Route, Routes, useLocation } from 'react-router-dom';
+import { ToastProvider } from './context/ToastProvider';
 import { AuthProvider, useAuth } from './context/AuthProvider';
-import Login from './components/Login';
-import Dashboard from './components/Dashboard';
-import Signup from './components/Signup';
-import StudentDashboard from './components/StudentDashboard';
-import SupervisorDashboard from './components/SupervisorDashboard';
-import GroupLeaderDashboard from './components/GroupLeaderDashboard';
+import AppShell from './components/layout/AppShell';
+import Login from './pages/auth/Login';
+import Signup from './pages/auth/Signup';
+import ForgotPassword from './pages/auth/ForgotPassword';
+import Dashboard from './pages/dashboard/Dashboard';
+import ProjectWorkspace from './pages/project/ProjectWorkspace';
 
-// Protected Route component
-const ProtectedRoute = ({ children }) => {
+function RequireAuth() {
   const { user } = useAuth();
-  const token = localStorage.getItem('access_token');
-  
-  if (!token || !user) {
-    return <Navigate to="/" replace />;
-  }
-  
-  return children ? children : <Outlet />;
-};
-
-function App() {
+  const location = useLocation();
+  if (!user) return <Navigate to="/login" replace state={{ from: location.pathname }} />;
   return (
-    <Router>
-      <AuthProvider>
-          <Routes>
-            <Route path="/" element={<Login />} />
-            <Route path="/login" element={<Login />} />
-            <Route path="/adduser" element={<Signup />} />
-            
-            {/* Protected Routes */}
-            <Route element={<ProtectedRoute />}>
-              <Route path="/dashboard" element={<Dashboard />} />
-              <Route path="/studentdashboard" element={<StudentDashboard />} />
-              <Route path="/supervisordashboard" element={<SupervisorDashboard />} />
-              <Route path="/groupleaderdashboard" element={<GroupLeaderDashboard />} />
-            </Route>
-            
-            {/* Redirect any unknown paths to home */}
-            <Route path="*" element={<Navigate to="/" replace />} />
-          </Routes>
-      </AuthProvider>
-    </Router>
+    <AppShell>
+      <Outlet />
+    </AppShell>
   );
 }
 
-export default App;
+function GuestOnly() {
+  const { user } = useAuth();
+  return user ? <Navigate to="/dashboard" replace /> : <Outlet />;
+}
+
+export default function App() {
+  return (
+    <BrowserRouter>
+      <ToastProvider>
+        <AuthProvider>
+          <Routes>
+            <Route element={<GuestOnly />}>
+              <Route path="/login" element={<Login />} />
+              <Route path="/signup" element={<Signup />} />
+              <Route path="/forgot-password" element={<ForgotPassword />} />
+            </Route>
+
+            <Route element={<RequireAuth />}>
+              <Route path="/dashboard" element={<Dashboard />} />
+              <Route path="/projects/:projectId" element={<ProjectWorkspace />} />
+              <Route path="/projects/:projectId/:tab" element={<ProjectWorkspace />} />
+            </Route>
+
+            {/* Addresses used by the previous version of the portal */}
+            <Route path="/adduser" element={<Navigate to="/signup" replace />} />
+            <Route path="/studentdashboard" element={<Navigate to="/dashboard" replace />} />
+            <Route path="/groupleaderdashboard" element={<Navigate to="/dashboard" replace />} />
+            <Route path="/supervisordashboard" element={<Navigate to="/dashboard" replace />} />
+            <Route path="*" element={<Navigate to="/dashboard" replace />} />
+          </Routes>
+        </AuthProvider>
+      </ToastProvider>
+    </BrowserRouter>
+  );
+}

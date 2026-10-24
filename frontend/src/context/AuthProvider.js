@@ -1,59 +1,69 @@
-import React, { createContext, useContext, useEffect, useState } from 'react';
+import React, { createContext, useCallback, useContext, useEffect, useMemo, useState } from 'react';
 import { useNavigate } from 'react-router-dom';
+import { jwtDecode } from 'jwt-decode';
+import { session, setSessionExpiredHandler } from '../api/client';
+import { useToast } from './ToastProvider';
 
-const AuthContext = createContext();
+const AuthContext = createContext(null);
 
-export const AuthProvider = ({ children }) => {
-  const [user, setUser] = useState(null);
+function tokenIsValid(token) {
+  if (!token) return false;
+  try {
+    const { exp } = jwtDecode(token);
+    return !exp || exp * 1000 > Date.now();
+  } catch {
+    return false;
+  }
+}
+
+export function AuthProvider({ children }) {
   const navigate = useNavigate();
+  const toast = useToast();
+  const [user, setUser] = useState(() => (tokenIsValid(session.token) ? session.user : null));
 
-  useEffect(() => {
-    const storedUser = localStorage.getItem('user');
-    if (storedUser) {
-      setUser(JSON.parse(storedUser));
-    }
+  const signIn = useCallback((token, profile) => {
+    session.save(token, profile);
+    setUser(profile);
   }, []);
 
-  const logout = () => {
-    localStorage.removeItem('access_token');
-    localStorage.removeItem('refresh_token');
-    localStorage.removeItem('user');
-    setUser(null);
-    navigate('/login');
-  };
-
-  const refreshToken = async () => {
-    const refresh = localStorage.getItem('refresh_token');
-    if (!refresh) return false;
-
-    try {
-      const API_BASE_URL = window.location.hostname === "localhost"
-        ? "http://127.0.0.1:8000"
-        : "https://https://pcp-backend-f4a2.onrender.com";
-
-      const response = await fetch(`${API_BASE_URL}/api/token/refresh/`, {
-        method: 'POST',
-        headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({ refresh }),
-      });
-
-      const data = await response.json();
-      if (data.access) {
-        localStorage.setItem('access_token', data.access);
-        return true;
-      }
-      return false;
-    } catch (error) {
-      console.error('Token refresh failed:', error);
-      return false;
-    }
-  };
-
-  return (
-    <AuthContext.Provider value={{ user, setUser, logout, refreshToken }}>
-      {children}
-    </AuthContext.Provider>
+  const signOut = useCallback(
+    (message) => {
+      session.clear();
+      setUser(null);
+      navigate('/login', { replace: true });
+      if (message) toast.info(message);
+    },
+    [navigate, toast],
   );
-};
 
-export const useAuth = () => useContext(AuthContext);
+  const updateProfile = useCallback((profile) => {
+    setUser((current) => {
+      const next = { ...current, ...profile };
+      session.saveUser(next);
+      return next;
+    });
+  }, []);
+
+  useEffect(() => {
+    setSessionExpiredHandler(() => signOut('Your session has ended. Please sign in again.'));
+  }, [signOut]);
+
+  // Sign out when the token runs out while the tab is open.
+  useEffect(() => {
+    if (!user) return undefined;
+    const timer = setInterval(() => {
+      if (!tokenIsValid(session.token)) signOut('Your session has ended. Please sign in again.');
+    }, 60 * 1000);
+    return () => clearInterval(timer);
+  }, [user, signOut]);
+
+  const value = useMemo(
+    () => ({ user, signIn, signOut, updateProfile }),
+    [user, signIn, signOut, updateProfile],
+  );
+  return <AuthContext.Provider value={value}>{children}</AuthContext.Provider>;
+}
+
+export function useAuth() {
+  return useContext(AuthContext);
+}
